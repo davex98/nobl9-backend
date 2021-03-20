@@ -2,7 +2,7 @@
   "name": "nobl9-backend",
   "version": "1.0.0",
   "scripts": {
-    "start": "export PORT=8080 && export CONCURRENT_REQUESTS=8080 && cd random-generator && go run .*",
+    "start": "export PORT=8080 && export CONCURRENT_REQUESTS=10 && cd random-generator && go run .*",
     "test": "cypress run"
   },
   "dependencies": {
