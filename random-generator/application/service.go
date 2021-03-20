@@ -47,11 +47,11 @@ func GetDeviation(numbers ...int) float32 {
 		total += number
 	}
 	size := len(numbers)
-	mean := total / size
+	mean := float32(total / size)
 
 	var sd float64
 	for _, number := range numbers {
-		a := (number) - mean
+		a := float32(number) - mean
 		sd += math.Pow(float64(a), 2)
 	}
 	sd = math.Sqrt(sd / float64(size))
