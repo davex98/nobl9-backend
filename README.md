@@ -1,3 +1,5 @@
+![example workflow](https://github.com/davex98/nobl9-backend/actions/workflows/tests.yml/badge.svg)
+
 # Table of Contents
 
 - [Overview](#overview)
