@@ -1,0 +1,33 @@
+name: Tests
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+      - '!main'
+jobs:
+  unit-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.x
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Test
+        run: make unit_test
+  end2end-tests:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Fetch apiUrl
+        run: echo ::set-output name=apiUrl::$(jq -r .env.apiUrl cypress.json)/ping
+        id: fetchApiUrl
+      - name: Run tests
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm run build
+          start: npm run start
+          wait-on: ${{ steps.fetchApiUrl.outputs.apiUrl }}
