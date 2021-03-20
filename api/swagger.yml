@@ -1,0 +1,61 @@
+openapi: 3.0.0
+info:
+  title: Nobl9-backend API
+  version: 1.0.0
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        stddev:
+          type: number
+        data:
+          type: array
+          items:
+            type: integer
+    GeneratedResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/Response'
+      example:
+        - stddev: 1
+          data: [1, 2, 3, 4, 5]
+        - stddev: 1
+          data: [1, 2, 3, 4, 5]
+        - stddev: 1
+          data: [1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      example:
+        error: "start_date should be earlier than end_date"
+paths:
+  /random/mean:
+    get:
+      summary: Get random numbers and their standard deviation.
+      parameters:
+        - in: query
+          name: requests
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: length
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pictures urls.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneratedResponse'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
