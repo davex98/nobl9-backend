@@ -1,0 +1,13 @@
+version: '3'
+services:
+  application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ../../random-generator:/random-generator
+    working_dir: /random-generator
+    ports:
+      - "127.0.0.1:8080:8080"
