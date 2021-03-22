@@ -21,7 +21,7 @@ run_app_from_repository:
 ifdef version
 	docker run -p 8080:8080 jakuburghardt/nobl9-backend:$(version)
 else
-	@echo 'specify version you wanna run, eg: make run_app_from_repository version=v5'
+	@echo 'specify version you wanna run (v1 is currently available), eg: make run_app_from_repository version=v1'
 endif
 ############# TESTS #############
 unit_test:

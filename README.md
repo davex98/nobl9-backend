@@ -33,7 +33,11 @@ Make sure you have installed all of the following prerequisites on your developm
 
 The applications requires setting up 3 environment variables (when running from [docker image](https://hub.docker.com/repository/docker/jakuburghardt/nobl9-backend), they are set to default values):
 - **PORT=8080**
-- **CONCURRENT_REQUESTS=5**
+- **CONCURRENT_REQUESTS=5** - Limit of concurrent requests
+  
+*As the provided date range in a single request might be broad, the random API should be queried
+  concurrently. However, in order not to be recognized as a malicious user, a limit of concurrent
+  requests to this external API must exist.*
 
 
 # How to
