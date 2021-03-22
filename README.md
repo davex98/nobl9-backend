@@ -33,7 +33,7 @@ Make sure you have installed all of the following prerequisites on your developm
 * Docker - [Download & Install Docker](https://docs.docker.com/engine/install/ubuntu/). Docker is used for building images and running the end-to-end tests.
 * Golang - [Download & Install Golang](https://golang.org/doc/install).
 
-The applications requires setting up 3 environment variables (when running from [docker image](https://hub.docker.com/repository/docker/jakuburghardt/nobl9-backend), they are set to default values):
+The applications requires setting up 2 environment variables (when running from [docker image](https://hub.docker.com/repository/docker/jakuburghardt/nobl9-backend), they are set to default values):
 - **PORT=8080**
 - **CONCURRENT_REQUESTS=5** - Limit of concurrent requests
   
