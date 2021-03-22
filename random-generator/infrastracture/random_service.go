@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 type service struct {
@@ -39,19 +40,20 @@ func (s service) GetRandomNumbers(ctx context.Context, length, requestsNumber in
 	wg := sync.WaitGroup{}
 
 	for i := 1; i <= requestsNumber; i++ {
-		wg.Add(1)
 		if err := sem.Acquire(ctx, 1); err != nil {
 			mutex.Lock()
 			result = multierror.Append(result, err)
 			mutex.Unlock()
+			continue
 		}
 
+		wg.Add(1)
 		go func() {
-			url, err := s.getRandomNumber(ctx, length)
+			numbers, err := s.getRandomNumber(ctx, length)
 			mutex.Lock()
 			defer mutex.Unlock()
 			result = multierror.Append(result, err)
-			randomNumbers = append(randomNumbers, url)
+			randomNumbers = append(randomNumbers, numbers)
 			wg.Done()
 			sem.Release(1)
 		}()
@@ -66,15 +68,19 @@ func (s service) GetRandomNumbers(ctx context.Context, length, requestsNumber in
 
 func (s service) getRandomNumber(ctx context.Context, length int) (application.RandomNumbersResponse, error) {
 	url := fmt.Sprintf("https://www.random.org/integers/?num=%v&min=1&max=10&format=plain&col=1&base=10", length)
+	ctx, cancelFunc := context.WithTimeout(ctx, time.Second*10)
+	defer cancelFunc()
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	resp, err := s.client.Do(req)
+	if err != nil {
+		return application.RandomNumbersResponse{}, err
+	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		statusMsg := http.StatusText(resp.StatusCode)
 		msg := fmt.Sprintf("could not get data from www.random.org, status code: %v: %s", resp.StatusCode, statusMsg)
-		fetchError := errors.New(msg)
-		return application.RandomNumbersResponse{}, fetchError
+		return application.RandomNumbersResponse{}, errors.New(msg)
 	}
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)

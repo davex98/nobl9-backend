@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"errors"
 	"math"
 )
 
@@ -16,8 +17,9 @@ func NewNumberService(service RandomService) NumberService {
 func (s NumberService) CollectRandomNumbers(ctx context.Context, length, requestsNumber int) ([]DeviationResponse, error) {
 	numbers, err := s.randomService.GetRandomNumbers(ctx, length, requestsNumber)
 	if err != nil {
-		return nil, err
+		return nil, handleError(err)
 	}
+
 	var response []DeviationResponse
 	var totalData []int
 	for _, number := range numbers {
@@ -62,4 +64,11 @@ func GetDeviation(numbers ...int) float32 {
 type DeviationResponse struct {
 	Stddev float32
 	Data   []int
+}
+
+func handleError(err error) error {
+	if errors.Is(err, context.DeadlineExceeded) {
+		return errors.New("request on random.org has timed out")
+	}
+	return err
 }

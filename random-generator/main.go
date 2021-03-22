@@ -8,12 +8,11 @@ import (
 	"github.com/davex98/nobl9-backend/random-generator/infrastracture"
 	"github.com/go-chi/chi"
 	"net/http"
-	"time"
 )
 
 func main() {
 	log.Init()
-	client := http.Client{Timeout: time.Second * 10}
+	client := http.Client{}
 	randomService := infrastracture.NewRandomService(client)
 	numberService := application.NewNumberService(randomService)
 	server.RunHTTPServer(func(router chi.Router) http.Handler {
